@@ -6,13 +6,15 @@ import {AppService} from './app.service';
 import {UserModule} from './user/user.module';
 import {PlantModule} from './plant/plant.module';
 import {AuthModule} from './auth/auth.module';
-import {MailHistoryModule} from './mail-history/mail-history.module';
+import {MailModule} from './mail/mail.module';
 import databaseConfig from './common/config/database.config';
+import authConfig from './common/config/auth.config';
+import googleConfig from './common/config/google.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [databaseConfig],
+      load: [databaseConfig, authConfig, googleConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -22,7 +24,7 @@ import databaseConfig from './common/config/database.config';
     UserModule,
     PlantModule,
     AuthModule,
-    MailHistoryModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
