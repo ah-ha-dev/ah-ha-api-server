@@ -18,7 +18,7 @@ export class User extends BaseEntity {
     unique: true,
     nullable: true,
   })
-  @ApiProperty({description: '사용자의 푸시 알림 받고 싶은 메일 개수', example: 'true'})
+  @ApiProperty({description: '사용자의 메일 삭제 알림 개수 ', example: 'true'})
   notificationLimit: boolean;
 
   @Column({
