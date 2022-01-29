@@ -1,4 +1,4 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards} from '@nestjs/common';
+import {Controller, Get, UseGuards} from '@nestjs/common';
 import {MailService} from './mail.service';
 import {JwtAuthGuard} from './../auth/guard/jwt-auth.guard';
 import {AuthUser} from './../common/decorator/user.decorator';
