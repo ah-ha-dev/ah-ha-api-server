@@ -9,6 +9,16 @@ export const Err = {
       message: '이미 존재하는 사용자입니다.',
     },
   },
+  PLANT: {
+    NOT_FOUND: {
+      code: 400,
+      message: '사용자의 식물이 존재하지 않습니다.',
+    },
+    EXISTING_PlANT: {
+      code: 400,
+      message: '사용자의 식물이 이미 존재합니다.',
+    },
+  },
   TOKEN: {
     INVALID_TOKEN: {
       code: 401,
@@ -27,10 +37,16 @@ export const Err = {
       message: '토큰이 전송되지 않았습니다.',
     },
   },
+  CODE: {
+    INVALID_CODE: {
+      code: 401,
+      message: '유효하지 않은 인가코드입니다.',
+    },
+  },
   SERVER: {
     UNEXPECTED_ERROR: {
       code: 500,
-      message: '예기치 못한 못한 서버에러가 발생했습니다.',
+      message: '서버에러가 발생했습니다.',
     },
   },
 };

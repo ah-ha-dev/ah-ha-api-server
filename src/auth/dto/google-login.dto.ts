@@ -11,6 +11,9 @@ export class GoogleLoginDto {
 export class GoogleLoginResponseDto {
   @ApiProperty({example: '123456789'})
   accessToken: string;
+
+  @ApiProperty({example: 'true'})
+  hasPlant: boolean;
 }
 
 export class GoogleLoginResponseBodyDto extends BaseResponseDto {
