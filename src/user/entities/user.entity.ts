@@ -6,21 +6,15 @@ import {MailHistory} from './../../mail-history/entities/mail-history.entity';
 
 @Entity()
 export class User extends BaseEntity {
-  @Column({
-    unique: true,
-    nullable: true,
-  })
+  @Column()
   @ApiProperty({description: '사용자의 구글 이메일', example: 'test@test.com'})
   gmail: string;
 
-  @Column({
-    unique: true,
-    nullable: true,
-  })
+  @Column()
   @ApiProperty({description: '사용자의 구글 ID', example: '1234'})
   googleAccount: string;
 
-  @Column({type: 'text', nullable: true})
+  @Column()
   @ApiProperty({description: '사용자의 구글 리프레시 토큰', example: '123456789'})
   googleRefreshToken: string;
 
@@ -28,7 +22,10 @@ export class User extends BaseEntity {
   @ApiProperty({description: '사용자의 푸시 알림 받고 싶은 메일 개수', example: 'true'})
   notificationLimit: boolean;
 
-  @Column()
+  @Column({
+    unique: true,
+    nullable: true,
+  })
   @ApiProperty({description: '사용자의 디바이스 아이디', example: '123456789'})
   deviceId: string;
 
