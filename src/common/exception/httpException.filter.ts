@@ -12,11 +12,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
       | {error: string; message: string[]; code: number | null};
     if (err.code) {
       return response.status(status).json({
-        success: false,
-        statusCode: err.code,
-        data: err.message,
+        code: err.code,
+        message: err.message,
+        data: '',
       });
     }
-    response.status(status).json({success: false, statusCode: status, data: err.message});
+    response.status(status).json({code: status, message: err.message, data: ''});
   }
 }
