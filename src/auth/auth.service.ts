@@ -20,11 +20,7 @@ export class AuthService {
   ) {}
 
   async logInWithGoogle(googleLoginDto: GoogleLoginDto): Promise<any> {
-    const oAuth2Client = new OAuth2Client({
-      clientId: this.configService.get('google').googleClientId,
-      clientSecret: this.configService.get('google').googleClientSecret,
-      redirectUri: this.configService.get('google').googleRedirectUri,
-    });
+    const oAuth2Client = this.configService.get('googleOAuth2Client');
 
     const {tokens} = await oAuth2Client.getToken(googleLoginDto.authorizationCode);
     const {email} = await oAuth2Client.getTokenInfo(tokens.access_token);

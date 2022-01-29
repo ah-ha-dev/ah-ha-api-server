@@ -18,11 +18,8 @@ export class MailService {
   ) {}
 
   async getMailNumber(userId: number) {
-    const oAuth2Client = new OAuth2Client({
-      clientId: this.configService.get('google').googleClientId,
-      clientSecret: this.configService.get('google').googleClientSecret,
-      redirectUri: this.configService.get('google').googleRedirectUri,
-    });
+    const oAuth2Client = this.configService.get('googleOAuth2Client');
+    console.log(oAuth2Client);
 
     const user = await this.userRepository.findOne({
       where: {
