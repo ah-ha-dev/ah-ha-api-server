@@ -3,7 +3,6 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {User} from './../user/entities/user.entity';
 import {Repository} from 'typeorm';
 import {GoogleLoginDto, GoogleLoginResponseDto} from './dto/google-login.dto';
-import {OAuth2Client} from 'google-auth-library';
 import {ConfigService} from '@nestjs/config';
 import {JwtService} from '@nestjs/jwt';
 import {Plant} from './../plant/entities/plant.entity';
