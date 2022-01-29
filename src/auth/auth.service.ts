@@ -1,26 +1,55 @@
 import {Injectable} from '@nestjs/common';
-import {CreateAuthDto} from './dto/create-auth.dto';
-import {UpdateAuthDto} from './dto/update-auth.dto';
+import {InjectRepository} from '@nestjs/typeorm';
+import {User} from './../user/entities/user.entity';
+import {Repository} from 'typeorm';
+import {GoogleLoginDto, GoogleLoginResponseDto} from './dto/google-login.dto';
+import {OAuth2Client} from 'google-auth-library';
+import {ConfigService} from '@nestjs/config';
+import {JwtService} from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private readonly configService: ConfigService,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  async logInWithGoogle(googleLoginDto: GoogleLoginDto): Promise<any> {
+    const oAuth2Client = new OAuth2Client({
+      clientId: this.configService.get('google').googleClientId,
+      clientSecret: this.configService.get('google').googleClientSecret,
+      redirectUri: this.configService.get('google').googleRedirectUri,
+    });
+
+    const {tokens} = await oAuth2Client.getToken(googleLoginDto.authorizationCode);
+    const {email} = await oAuth2Client.getTokenInfo(tokens.access_token);
+
+    let user = await this.userRepository.findOne({
+      where: {
+        gmail: email,
+      },
+    });
+
+    if (!user) {
+      user = await this.signUpWithGoogle(email, tokens.refresh_token);
+    }
+
+    return await this.createAccessToken(user.id);
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  async signUpWithGoogle(gmail: string, refreshToken: string): Promise<User> {
+    const user = await this.userRepository.save({
+      gmail,
+      googleRefreshToken: refreshToken,
+    });
+    return user;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  async createAccessToken(id: number): Promise<GoogleLoginResponseDto> {
+    const payload = {sub: id};
+    const accessToken = this.jwtService.sign(payload);
+    return {accessToken};
   }
 }
