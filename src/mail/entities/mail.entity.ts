@@ -4,7 +4,7 @@ import {BaseEntity} from './../../common/entity/base-entity.entity';
 import {User} from './../../user/entities/user.entity';
 
 @Entity()
-export class MailHistory extends BaseEntity {
+export class Mail extends BaseEntity {
   @Column()
   @ApiProperty({description: '사용자의 받은 이메일 개수', example: 'test@test.com'})
   inboxNumber: number;
@@ -22,6 +22,6 @@ export class MailHistory extends BaseEntity {
   trashNumber: number;
 
   /* Relations */
-  @OneToOne(() => User, user => user.mailHistory)
+  @OneToOne(() => User, user => user.mail)
   user: User;
 }
