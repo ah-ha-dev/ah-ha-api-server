@@ -6,20 +6,8 @@ import {User} from './../../user/entities/user.entity';
 @Entity()
 export class Mail extends BaseEntity {
   @Column()
-  @ApiProperty({description: '사용자의 받은 이메일 개수', example: 'test@test.com'})
-  inboxNumber: number;
-
-  @Column()
-  @ApiProperty({description: '사용자의 보낸 이메일 개수', example: 'test@test.com'})
-  sentNumber: number;
-
-  @Column()
-  @ApiProperty({description: '사용자의 스팸 이메일 개수', example: 'test@test.com'})
-  spamNumber: number;
-
-  @Column()
-  @ApiProperty({description: '사용자의 휴지통 이메일 개수', example: 'test@test.com'})
-  trashNumber: number;
+  @ApiProperty({description: '사용자의 이메일 개수 총합', example: 'test@test.com'})
+  totalNumber: number;
 
   /* Relations */
   @OneToOne(() => User, user => user.mail)
