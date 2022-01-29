@@ -1,6 +1,6 @@
 import {ApiProperty} from '@nestjs/swagger';
-import {BaseResponseDto} from 'src/common/dto/base-response.dto';
 import {GetPlantInfoResponseDto} from './getPlantInfo.dto';
+import {BasePostReponseDto} from './../../common/dto/base-post-response.dto';
 
 export class CreatePlantDto {
   @ApiProperty({description: '식물의 이름', example: '식물이'})
@@ -10,10 +10,7 @@ export class CreatePlantDto {
   kind: string;
 }
 
-export class CreatePlantResponseBodyDto extends BaseResponseDto {
-  @ApiProperty({example: 201})
-  statusCode: number;
-
+export class CreatePlantResponseBodyDto extends BasePostReponseDto {
   @ApiProperty()
   data: GetPlantInfoResponseDto;
 }

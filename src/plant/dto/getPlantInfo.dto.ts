@@ -1,5 +1,5 @@
 import {ApiProperty} from '@nestjs/swagger';
-import {BaseResponseDto} from 'src/common/dto/base-response.dto';
+import {BaseGetReponseDto} from './../../common/dto/base-get-response.dto';
 
 export class GetPlantInfoResponseDto {
   @ApiProperty({description: '식물의 아이디', example: '1'})
@@ -21,10 +21,7 @@ export class GetPlantInfoResponseDto {
   ordinalNumber: number;
 }
 
-export class GetPlantInfoResponseBodyDto extends BaseResponseDto {
-  @ApiProperty({example: 200})
-  statusCode: number;
-
+export class GetPlantInfoResponseBodyDto extends BaseGetReponseDto {
   @ApiProperty()
   data: GetPlantInfoResponseDto;
 }
