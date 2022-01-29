@@ -5,6 +5,6 @@ export class BaseUpdateResponseDto extends BaseResponseDto {
   @ApiProperty({example: 200})
   statusCode: number;
 
-  @ApiProperty({example: 'Record successfully updated'})
+  @ApiProperty({example: '업데이트에 성공하였습니다.'})
   data;
 }
