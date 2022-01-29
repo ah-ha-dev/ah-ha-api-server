@@ -6,22 +6,21 @@ import {GoogleLoginDto, GoogleLoginResponseDto} from './dto/google-login.dto';
 import {OAuth2Client} from 'google-auth-library';
 import {ConfigService} from '@nestjs/config';
 import {JwtService} from '@nestjs/jwt';
+import {Plant} from './../plant/entities/plant.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Plant)
+    private readonly plantRepository: Repository<Plant>,
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
   ) {}
 
   async logInWithGoogle(googleLoginDto: GoogleLoginDto): Promise<any> {
-    const oAuth2Client = new OAuth2Client({
-      clientId: this.configService.get('google').googleClientId,
-      clientSecret: this.configService.get('google').googleClientSecret,
-      redirectUri: this.configService.get('google').googleRedirectUri,
-    });
+    const oAuth2Client = this.configService.get('googleOAuth2Client');
 
     const {tokens} = await oAuth2Client.getToken(googleLoginDto.authorizationCode);
     const {email} = await oAuth2Client.getTokenInfo(tokens.access_token);
@@ -43,6 +42,11 @@ export class AuthService {
     const user = await this.userRepository.save({
       gmail,
       googleRefreshToken: refreshToken,
+    });
+    await this.plantRepository.save({
+      score: 0,
+      level: 1,
+      user,
     });
     return user;
   }
