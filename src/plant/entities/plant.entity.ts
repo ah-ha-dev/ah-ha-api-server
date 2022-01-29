@@ -6,12 +6,19 @@ import {User} from './../../user/entities/user.entity';
 @Entity()
 export class Plant extends BaseEntity {
   @Column()
-  @ApiProperty({description: '식물의 점수', example: '20'})
+  name: string;
+
+  @Column()
+  kind: string;
+
+  @Column()
   score: number;
 
   @Column()
-  @ApiProperty({description: '식물의 레벨', example: '2'})
   level: number;
+
+  @Column()
+  ordinalNumber: number;
 
   /* Relations */
   @OneToOne(() => User, user => user.plant)

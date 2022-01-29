@@ -1,6 +1,6 @@
 import {ApiProperty} from '@nestjs/swagger';
 import {IsString} from 'class-validator';
-import {BaseResponseDto} from 'src/common/dto/base-response.dto';
+import {BasePostReponseDto} from './../../common/dto/base-post-response.dto';
 
 export class GoogleLoginDto {
   @IsString()
@@ -16,10 +16,7 @@ export class GoogleLoginResponseDto {
   hasPlant: boolean;
 }
 
-export class GoogleLoginResponseBodyDto extends BaseResponseDto {
-  @ApiProperty({example: 201})
-  statusCode: number;
-
+export class GoogleLoginResponseBodyDto extends BasePostReponseDto {
   @ApiProperty()
   data: GoogleLoginResponseDto;
 }

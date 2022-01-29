@@ -1,4 +1,4 @@
-import {Injectable, BadRequestException, ServiceUnavailableException} from '@nestjs/common';
+import {Injectable, InternalServerErrorException, UnauthorizedException} from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
 import {Err} from './../../common/error';
 
@@ -10,16 +10,16 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
     switch (info.toString()) {
       case 'Error: No auth token':
-        throw new BadRequestException(Err.TOKEN.NOT_SEND_TOKEN);
+        throw new UnauthorizedException(Err.TOKEN.NOT_SEND_TOKEN);
 
       case 'JsonWebTokenError: invalid signature':
-        throw new BadRequestException(Err.TOKEN.INVALID_TOKEN);
+        throw new UnauthorizedException(Err.TOKEN.INVALID_TOKEN);
 
       case 'TokenExpiredError: jwt expired':
-        throw new BadRequestException(Err.TOKEN.JWT_EXPIRED);
+        throw new UnauthorizedException(Err.TOKEN.JWT_EXPIRED);
 
       default:
-        throw new ServiceUnavailableException(Err.SERVER.UNEXPECTED_ERROR);
+        throw new InternalServerErrorException(Err.SERVER.UNEXPECTED_ERROR);
     }
   }
 }

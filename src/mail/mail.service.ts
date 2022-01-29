@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, BadRequestException} from '@nestjs/common';
 import {Mail} from './entities/mail.entity';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
@@ -6,6 +6,7 @@ import {gmail} from '@googleapis/gmail';
 import {ConfigService} from '@nestjs/config';
 import {User} from './../user/entities/user.entity';
 import {PlantService} from './../plant/plant.service';
+import {Err} from './../common/error';
 
 @Injectable()
 export class MailService {
@@ -18,7 +19,7 @@ export class MailService {
     private readonly plantService: PlantService,
   ) {}
 
-  async getMailNumber(userId: number) {
+  async getMailTotalCount(userId: number): Promise<any> {
     const oAuth2Client = this.configService.get('googleOAuth2Client');
 
     const user = await this.userRepository.findOne({
@@ -27,6 +28,8 @@ export class MailService {
       },
       relations: ['mail', 'plant'],
     });
+
+    if (!user) throw new BadRequestException(Err.USER.NOT_FOUND);
 
     oAuth2Client.setCredentials({refresh_token: user.googleRefreshToken});
     const {token} = await oAuth2Client.getAccessToken();
@@ -37,39 +40,27 @@ export class MailService {
       auth: oAuth2Client,
     });
 
-    // // 사용자 전체 리스트 가져오는 코드
-    // const labels = [];
-    // const {data} = await googleMail.users.labels.list({
-    //   userId: user.gmail,
-    // });
-    // const list = data.labels;
+    // 가져올 메일 종류 : 보낸 메일함, 스팸 메일함
+    const labels = ['INBOX', 'SPAM'];
+    let totalCount = 0;
 
-    // for (const label of list) {
-    //   labels.push(label.name);
-    // }
-
-    // 사용자 메일함 리스트 목록
-    const labels = ['INBOX', 'SENT', 'SPAM', 'TRASH'];
-    let totalNumber = 0;
-
-    const mailList = await Promise.all(
+    await Promise.all(
       labels.map(async label => {
         const {data} = await googleMail.users.labels.get({
           userId: user.gmail,
           id: label,
         });
-        totalNumber += data.threadsTotal;
-        return data;
+        totalCount += data.threadsTotal;
       }),
     );
 
     if (!user.mail) {
-      await this.mailRepository.save({totalNumber, user});
+      await this.mailRepository.save({totalCount, user});
     } else {
-      const score = user.mail.totalNumber - totalNumber;
-      this.plantService.updatePlantInfo(user.plant.id, score);
-      await this.mailRepository.update(user.mail.id, {totalNumber});
+      const score = user.mail.totalCount - totalCount;
+      if (score > 0) this.plantService.updatePlantScore(user.plant.id, score);
+      await this.mailRepository.update(user.mail.id, {totalCount});
     }
-    return {mailList};
+    return {totalCount};
   }
 }

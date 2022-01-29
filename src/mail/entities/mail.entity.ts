@@ -6,8 +6,7 @@ import {User} from './../../user/entities/user.entity';
 @Entity()
 export class Mail extends BaseEntity {
   @Column()
-  @ApiProperty({description: '사용자의 이메일 개수 총합', example: 'test@test.com'})
-  totalNumber: number;
+  totalCount: number;
 
   /* Relations */
   @OneToOne(() => User, user => user.mail)
