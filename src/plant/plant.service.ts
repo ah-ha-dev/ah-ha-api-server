@@ -1,26 +1,37 @@
 import {Injectable} from '@nestjs/common';
-import {CreatePlantDto} from './dto/create-plant.dto';
-import {UpdatePlantDto} from './dto/update-plant.dto';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Plant} from './entities/plant.entity';
+import {Repository} from 'typeorm';
+import {User} from './../user/entities/user.entity';
 
 @Injectable()
 export class PlantService {
-  create(createPlantDto: CreatePlantDto) {
-    return 'This action adds a new plant';
+  constructor(
+    @InjectRepository(Plant)
+    private readonly plantRepository: Repository<Plant>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
+
+  async updatePlantInfo(plantId: number, score: number) {
+    const plant = await this.plantRepository.findOne(plantId);
+    let level = plant.level;
+
+    // todo  레벨 계산하는 로직 추가
+
+    if (score > 0) {
+      level = 1;
+      await this.plantRepository.update(plantId, {score, level});
+    }
   }
 
-  findAll() {
-    return `This action returns all plant`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} plant`;
-  }
-
-  update(id: number, updatePlantDto: UpdatePlantDto) {
-    return `This action updates a #${id} plant`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} plant`;
+  async getPlantInfo(userId: number) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+      relations: ['plant'],
+    });
+    return await this.plantRepository.findOne(user.plant.id);
   }
 }

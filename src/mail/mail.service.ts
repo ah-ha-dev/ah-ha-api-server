@@ -4,8 +4,8 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
 import {gmail} from '@googleapis/gmail';
 import {ConfigService} from '@nestjs/config';
-import {OAuth2Client} from 'google-auth-library';
 import {User} from './../user/entities/user.entity';
+import {PlantService} from './../plant/plant.service';
 
 @Injectable()
 export class MailService {
@@ -15,17 +15,17 @@ export class MailService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly configService: ConfigService,
+    private readonly plantService: PlantService,
   ) {}
 
   async getMailNumber(userId: number) {
     const oAuth2Client = this.configService.get('googleOAuth2Client');
-    console.log(oAuth2Client);
 
     const user = await this.userRepository.findOne({
       where: {
         id: userId,
       },
-      relations: ['mail'],
+      relations: ['mail', 'plant'],
     });
 
     oAuth2Client.setCredentials({refresh_token: user.googleRefreshToken});
@@ -66,6 +66,8 @@ export class MailService {
     if (!user.mail) {
       await this.mailRepository.save({totalNumber, user});
     } else {
+      const score = user.mail.totalNumber - totalNumber;
+      this.plantService.updatePlantInfo(user.plant.id, score);
       await this.mailRepository.update(user.mail.id, {totalNumber});
     }
     return {mailList};
