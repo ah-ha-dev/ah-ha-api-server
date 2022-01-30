@@ -4,36 +4,43 @@ import {BaseEntity} from './../../common/entity/base-entity.entity';
 import {Plant} from './../../plant/entities/plant.entity';
 import {Mail} from './../../mail/entities/mail.entity';
 
+export enum GetNotification {
+  YES = 'YES', // 한국어 자막
+  NO = 'NO', // 영어 자막
+}
+
 @Entity()
 export class User extends BaseEntity {
   @Column()
-  @ApiProperty({description: '사용자의 구글 이메일', example: 'test@test.com'})
   gmail: string;
 
   @Column()
-  @ApiProperty({description: '사용자의 구글 리프레시 토큰', example: '123456789'})
   googleRefreshToken: string;
 
   @Column({
     unique: true,
     nullable: true,
   })
-  @ApiProperty({description: '사용자의 메일 삭제 알림 개수 ', example: 'true'})
-  notificationLimit: boolean;
+  notification: GetNotification;
 
   @Column({
     unique: true,
     nullable: true,
   })
-  @ApiProperty({description: '사용자의 디바이스 아이디', example: '123456789'})
+  notificationLimit: number;
+
+  @Column({
+    unique: true,
+    nullable: true,
+  })
   deviceId: string;
 
   /* Relations */
-  @OneToOne(() => Plant, plant => plant.user, {onDelete: 'CASCADE'})
+  @OneToOne(() => Plant, plant => plant.user, {eager: true, onDelete: 'CASCADE'})
   @JoinColumn()
   plant: Plant;
 
-  @OneToOne(() => Mail, mail => mail.user, {onDelete: 'CASCADE'})
+  @OneToOne(() => Mail, mail => mail.user, {eager: true, onDelete: 'CASCADE'})
   @JoinColumn()
   mail: Mail;
 }

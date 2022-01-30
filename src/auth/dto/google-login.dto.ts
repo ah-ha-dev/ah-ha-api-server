@@ -6,6 +6,10 @@ export class GoogleLoginDto {
   @IsString()
   @ApiProperty({example: 'google12345'})
   authorizationCode: string;
+
+  @IsString()
+  @ApiProperty({example: '12345'})
+  deviceId: string;
 }
 
 export class GoogleLoginResponseDto {
