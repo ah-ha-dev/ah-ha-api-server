@@ -11,21 +11,21 @@ import {CreatePlantDto} from './dto/createPlant.dto';
 export class PlantController {
   constructor(private readonly plantService: PlantService) {}
 
-  @Post('me')
+  @Post()
   @docs.createPlant('사용자 식물 생성')
   @UseGuards(JwtAuthGuard)
   createPlant(@AuthUser() user, @Body() createPlant: CreatePlantDto) {
     return this.plantService.createPlant(user.id, createPlant);
   }
 
-  @Get('me')
+  @Get()
   @docs.getPlantInfo('사용자 식물 정보')
   @UseGuards(JwtAuthGuard)
   getPlantInfo(@AuthUser() user) {
     return this.plantService.getPlantInfo(user.id);
   }
 
-  @Patch('me')
+  @Patch()
   @docs.updatePlantInfo('사용자 식물 정보 업데이트')
   @UseGuards(JwtAuthGuard)
   updatePlantInfo(@AuthUser() user, @Body() createPlant: CreatePlantDto) {
