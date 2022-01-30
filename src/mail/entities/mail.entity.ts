@@ -9,6 +9,6 @@ export class Mail extends BaseEntity {
   totalCount: number;
 
   /* Relations */
-  @OneToOne(() => User, user => user.mail)
+  @OneToOne(() => User, user => user.mail, {onDelete: 'CASCADE'})
   user: User;
 }
