@@ -1,26 +1,44 @@
-import {Injectable} from '@nestjs/common';
-import {CreateUserDto} from './dto/create-user.dto';
-import {UpdateUserDto} from './dto/update-user.dto';
+import {Injectable, BadRequestException} from '@nestjs/common';
+import {UpdateNotificationInfo} from './dto/updateNotificationInfo.dto';
+import {InjectRepository} from '@nestjs/typeorm';
+import {User} from './entities/user.entity';
+import {Repository} from 'typeorm';
+import {Err} from './../common/error';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
+
+  async getMyInfo(userId: number) {
+    const user = await this.userRepository.findOne(userId);
+
+    if (!user) throw new BadRequestException(Err.USER.NOT_FOUND);
+
+    delete user.googleRefreshToken;
+    delete user.plant;
+    delete user.mail;
+    return user;
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async updateNotificationInfo(userId: number, updateNotificationInfo: UpdateNotificationInfo) {
+    const user = await this.userRepository.findOne(userId);
+
+    if (!user) throw new BadRequestException(Err.USER.NOT_FOUND);
+
+    await this.userRepository.update(userId, updateNotificationInfo);
+    return '업데이트에 성공하였습니다.';
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
+  async deleteUser(userId: number) {
+    const user = await this.userRepository.findOne(userId);
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
+    if (!user) throw new BadRequestException(Err.USER.NOT_FOUND);
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+    await this.userRepository.delete(user);
+
+    return `${userId}번 사용자 삭제 완료했습니다.`;
   }
 }
