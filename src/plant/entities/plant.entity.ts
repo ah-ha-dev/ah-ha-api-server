@@ -21,6 +21,6 @@ export class Plant extends BaseEntity {
   ordinalNumber: number;
 
   /* Relations */
-  @OneToOne(() => User, user => user.plant)
+  @OneToOne(() => User, user => user.plant, {onDelete: 'CASCADE'})
   user: User;
 }

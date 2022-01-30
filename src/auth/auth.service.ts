@@ -32,7 +32,9 @@ export class AuthService {
 
       // 새로운 유저인 경우 회원가입 진행
       if (!user) {
-        user = await this.signUpWithGoogle(email, tokens.refresh_token);
+        user = await this.signUpWithGoogle(email, tokens.refresh_token, googleLoginDto.deviceId);
+      } else {
+        await this.userRepository.update(user.id, {deviceId: googleLoginDto.deviceId});
       }
 
       // 유저가 이미 식물 캐릭터를 가지고 있는지 확인
@@ -53,10 +55,11 @@ export class AuthService {
     }
   }
 
-  async signUpWithGoogle(gmail: string, refreshToken: string): Promise<User> {
+  async signUpWithGoogle(gmail: string, refreshToken: string, deviceId: string): Promise<User> {
     const user = await this.userRepository.save({
       gmail,
       googleRefreshToken: refreshToken,
+      deviceId,
     });
     return user;
   }
