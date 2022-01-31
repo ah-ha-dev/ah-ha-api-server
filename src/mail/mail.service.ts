@@ -58,7 +58,7 @@ export class MailService {
       await this.mailRepository.save({totalCount, user});
     } else {
       const score = user.mail.totalCount - totalCount;
-      if (score > 0) this.plantService.updatePlantScore(user.plant.id, score);
+      if (score > 0) await this.plantService.updatePlantScore(user.plant.id, score);
       await this.mailRepository.update(user.mail.id, {totalCount});
     }
     return {totalCount};
