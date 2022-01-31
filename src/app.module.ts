@@ -10,6 +10,8 @@ import {MailModule} from './mail/mail.module';
 import databaseConfig from './common/config/database.config';
 import authConfig from './common/config/auth.config';
 import googleOAuth2ClientConfig from './common/config/googleOAuth2Client.config';
+import {ScheduleModule} from '@nestjs/schedule';
+import {PushNotificationModule} from './push-notification/push-notification.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import googleOAuth2ClientConfig from './common/config/googleOAuth2Client.config'
     PlantModule,
     AuthModule,
     MailModule,
+    ScheduleModule.forRoot(),
+    PushNotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
