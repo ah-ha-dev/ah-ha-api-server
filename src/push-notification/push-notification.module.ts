@@ -6,7 +6,6 @@ import {ConfigModule} from '@nestjs/config';
 
 @Module({
   imports: [ConfigModule, TypeOrmModule.forFeature([User])],
-  controllers: [],
   providers: [PushNotificationService],
 })
 export class PushNotificationModule {}
