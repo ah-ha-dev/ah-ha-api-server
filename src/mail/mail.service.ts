@@ -33,14 +33,13 @@ export class MailService {
 
     oAuth2Client.setCredentials({refresh_token: user.googleRefreshToken});
     const {token} = await oAuth2Client.getAccessToken();
-
     oAuth2Client.setCredentials({access_token: token});
+
     const googleMail = gmail({
       version: 'v1',
       auth: oAuth2Client,
     });
-
-    // 가져올 메일 종류 : 보낸 메일함, 스팸 메일함
+    // 가져올 메일함 종류 : 보낸 메일함, 스팸 메일함
     const labels = ['INBOX', 'SPAM'];
     let totalCount = 0;
 
