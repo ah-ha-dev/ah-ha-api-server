@@ -10,11 +10,21 @@ import {MailModule} from './mail/mail.module';
 import databaseConfig from './common/config/database.config';
 import authConfig from './common/config/auth.config';
 import googleOAuth2ClientConfig from './common/config/googleOAuth2Client.config';
+import {ScheduleModule} from '@nestjs/schedule';
+import {PushNotificationModule} from './push-notification/push-notification.module';
+import googleAuthConfig from './common/config/googleAuth.config';
+import googlePubSubConfig from './common/config/googlePubSub.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [databaseConfig, authConfig, googleOAuth2ClientConfig],
+      load: [
+        databaseConfig,
+        authConfig,
+        googleOAuth2ClientConfig,
+        googleAuthConfig,
+        googlePubSubConfig,
+      ],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -25,6 +35,8 @@ import googleOAuth2ClientConfig from './common/config/googleOAuth2Client.config'
     PlantModule,
     AuthModule,
     MailModule,
+    ScheduleModule.forRoot(),
+    PushNotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
