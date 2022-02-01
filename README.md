@@ -1,7 +1,7 @@
 # AH HA
 
 ## 📚 ERD
-![image](https://user-images.githubusercontent.com/66551410/151686763-0659cdc5-8bcf-454e-8d02-fb6b31d2f767.png)
+![image](https://user-images.githubusercontent.com/66551410/151972459-5b975570-138a-4cc8-8437-7cbdd1a0de4c.png)
 
 ## 📦 CICD Architecture
 ![image](https://user-images.githubusercontent.com/66551410/143553684-ec4748e5-d4ba-4c63-ba80-b7c958e00eed.png)
