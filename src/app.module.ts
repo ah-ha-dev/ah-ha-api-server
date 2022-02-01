@@ -15,8 +15,9 @@ import {PushNotificationModule} from './push-notification/push-notification.modu
 import {PlantHistoryModule} from './plant-history/plant-history.module';
 import googleAuthConfig from './common/config/googleAuth.config';
 import googlePubSubConfig from './common/config/googlePubSub.config';
-import awsConfig from './common/config/dynamoDB.config';
 import dynamoDBConfig from './common/config/dynamoDB.config';
+import sentryConfig from './common/config/sentry.config';
+import firebaseConfig from './common/config/firebase.config';
 
 @Module({
   imports: [
@@ -28,6 +29,8 @@ import dynamoDBConfig from './common/config/dynamoDB.config';
         googleAuthConfig,
         googlePubSubConfig,
         dynamoDBConfig,
+        sentryConfig,
+        firebaseConfig,
       ],
     }),
     TypeOrmModule.forRootAsync({
