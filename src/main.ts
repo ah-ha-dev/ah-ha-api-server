@@ -24,17 +24,17 @@ async function bootstrap() {
   todo deviceId 받아서 테스트 해보기
   */
 
-  // const ConfigService = firebaseConfig();
-  // const adminConfig: ServiceAccount = {
-  //   projectId: ConfigService.projectId,
-  //   privateKey: ConfigService.privateKey,
-  //   clientEmail: ConfigService.clientEmail,
-  // };
+  const ConfigService = firebaseConfig();
+  const adminConfig: ServiceAccount = {
+    projectId: ConfigService.projectId,
+    privateKey: ConfigService.privateKey,
+    clientEmail: ConfigService.clientEmail,
+  };
 
-  // admin.initializeApp({
-  //   credential: admin.credential.cert(adminConfig),
-  //   databaseURL: 'https://ahchacha-8f274-default-rtdb.firebaseio.com/',
-  // });
+  admin.initializeApp({
+    credential: admin.credential.cert(adminConfig),
+    databaseURL: 'https://ah-ha-gcp-default-rtdb.firebaseio.com/',
+  });
 
   const config = new DocumentBuilder()
     .setTitle('AH-HA API docs')
