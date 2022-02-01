@@ -8,9 +8,7 @@ import {TransformInterceptor} from './common/interceptor/transform.interceptor';
 import * as admin from 'firebase-admin';
 import {ServiceAccount} from 'firebase-admin';
 import {ConfigService} from '@nestjs/config';
-import firebaseConfig from './common/config/firebase.config';
 import * as Sentry from '@sentry/node';
-import sentryConfig from './common/config/sentry.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,11 +18,12 @@ async function bootstrap() {
   TODO
   todo deviceId 받아서 테스트 해보기
   */
-  const FirebaseConfig = firebaseConfig();
+  const configService = app.get<ConfigService>(ConfigService);
+
   const adminConfig: ServiceAccount = {
-    projectId: FirebaseConfig.projectId,
-    privateKey: FirebaseConfig.privateKey,
-    clientEmail: FirebaseConfig.clientEmail,
+    projectId: configService.get('firebase').projectId,
+    privateKey: configService.get('firebase').privateKey,
+    clientEmail: configService.get('firebase').clientEmail,
   };
 
   admin.initializeApp({
@@ -32,9 +31,8 @@ async function bootstrap() {
     databaseURL: 'https://ah-ha-gcp-default-rtdb.firebaseio.com/',
   });
 
-  const SentryConfig = sentryConfig();
   Sentry.init({
-    dsn: SentryConfig.dsn,
+    dsn: configService.get('sentry').dsn,
   });
 
   app.setGlobalPrefix(API_PREFIX);

@@ -17,6 +17,7 @@ import googleAuthConfig from './common/config/googleAuth.config';
 import googlePubSubConfig from './common/config/googlePubSub.config';
 import dynamoDBConfig from './common/config/dynamoDB.config';
 import sentryConfig from './common/config/sentry.config';
+import firebaseConfig from './common/config/firebase.config';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import sentryConfig from './common/config/sentry.config';
         googlePubSubConfig,
         dynamoDBConfig,
         sentryConfig,
+        firebaseConfig,
       ],
     }),
     TypeOrmModule.forRootAsync({
