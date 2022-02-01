@@ -36,7 +36,8 @@ export const docs: SwaggerMethodDoc<UserController> = {
       ApiBearerAuth(),
       ApiOperation({
         summary,
-        description: '사용자의 푸시 알람 정보를 업데이트합니다. 사용자가 ',
+        description:
+          '사용자의 푸시 알람 정보를 업데이트합니다. \t\n 사용자가 환경 보호 정보 알림을 원하는 경우: "notification": "YES" /  사용자가 환경 보호 정보 알림을 원하지 않는 경우: "notification": "NO"  \t\n 사용자가 메일 삭제 알림을 원하는 경우: "notificationLimit" 0 이상 /  사용자가 메일 삭제 알림을 원하지 않는 경우: "notificationLimit": 0',
       }),
       ApiOkResponse({
         type: BaseUpdateResponseDto,

@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, OnApplicationBootstrap} from '@nestjs/common';
 import {SchedulerRegistry} from '@nestjs/schedule';
 import {CronJob} from 'cron';
 import * as admin from 'firebase-admin';
@@ -10,13 +10,21 @@ import {Repository} from 'typeorm';
 import {gmail} from '@googleapis/gmail';
 
 @Injectable()
-export class PushNotificationService {
+export class PushNotificationService implements OnApplicationBootstrap {
   constructor(
     private readonly schedulerRegistry: SchedulerRegistry,
     private readonly configService: ConfigService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
+
+  onApplicationBootstrap() {
+    // 메일 삭제 푸시 알림 작동
+    this.sendDeleteMailPushNotification();
+
+    // // 환경 보호 정보 알릶 작동
+    // this.snedInformationPushNotification();
+  }
 
   async sendDeleteMailPushNotification() {
     const auth = this.configService.get('googleAuth');
@@ -30,8 +38,15 @@ export class PushNotificationService {
     // 메일 삭제 푸시 알림 동의 사용자 푸시 알림 보내는 로직
     const messageHandler = async message => {
       // 메일 삭제 푸시알림 동의 사용자 이메일 확인
-      console.log(message.data.emailAddress);
-      const consentedUserEmail = message.data.emailAddress;
+      console.log(
+        `Received message: id ${message.id}, data ${message.data}, attributes: ${JSON.stringify(
+          message.attributes,
+        )}`,
+      );
+      message.ack();
+
+      const {emailAddress} = JSON.parse(`${message.data}`);
+      const consentedUserEmail = emailAddress;
       const consentedUser = await this.userRepository.findOne({gmail: consentedUserEmail});
 
       // 사용자 접근 권한 확인
@@ -56,6 +71,7 @@ export class PushNotificationService {
           totalCount += data.threadsTotal;
         }),
       );
+
       if (totalCount == consentedUser.notificationLimit) {
         // 사용자한테 보내는 푸시 알림 내용
         const token = consentedUser.deviceId;
@@ -66,7 +82,6 @@ export class PushNotificationService {
           },
           token,
         };
-
         // firebase에 알람 보내는 로직
         // await admin
         //   .messaging()
@@ -78,7 +93,6 @@ export class PushNotificationService {
         //     console.log('Error sending push notification:', error);
         //   });
       }
-      message.ack();
     };
     subscription.on('message', messageHandler);
     return;

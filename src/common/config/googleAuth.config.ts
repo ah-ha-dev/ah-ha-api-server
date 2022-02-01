@@ -6,7 +6,7 @@ export default registerAs('googleAuth', async (): Promise<GoogleAuth> => {
   return new GoogleAuth({
     credentials: {
       type: process.env.GOOGLE_CREDENTIALS_TYPE,
-      private_key: process.env.GOOGLE_CREDENTIALS_PRIVATE_KEY,
+      private_key: process.env.GOOGLE_CREDENTIALS_PRIVATE_KEY.replace(/\\n/g, '\n'),
       client_email: process.env.GOOGLE_CREDENTIALS_CLIENT_EMAIL,
       client_id: process.env.GOOGLE_CREDENTIALS_CLIEND_ID,
     },
