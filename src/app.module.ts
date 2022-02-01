@@ -12,6 +12,7 @@ import authConfig from './common/config/auth.config';
 import googleOAuth2ClientConfig from './common/config/googleOAuth2Client.config';
 import {ScheduleModule} from '@nestjs/schedule';
 import {PushNotificationModule} from './push-notification/push-notification.module';
+import {PlantHistoryModule} from './plant-history/plant-history.module';
 import googleAuthConfig from './common/config/googleAuth.config';
 import googlePubSubConfig from './common/config/googlePubSub.config';
 import awsConfig from './common/config/dynamoDB.config';
@@ -40,6 +41,7 @@ import dynamoDBConfig from './common/config/dynamoDB.config';
     MailModule,
     ScheduleModule.forRoot(),
     PushNotificationModule,
+    PlantHistoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
