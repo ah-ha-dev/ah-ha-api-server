@@ -5,12 +5,15 @@ import {Repository} from 'typeorm';
 import {User} from './../user/entities/user.entity';
 import {Err} from './../common/error';
 import {CreatePlantDto} from './dto/createPlant.dto';
+import {PlantHistory} from './../plant-history/entities/plant-history.entity';
 
 @Injectable()
 export class PlantService {
   constructor(
     @InjectRepository(Plant)
     private readonly plantRepository: Repository<Plant>,
+    @InjectRepository(PlantHistory)
+    private readonly plantHistoryRepository: Repository<PlantHistory>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
@@ -25,6 +28,12 @@ export class PlantService {
 
     if (!user) throw new BadRequestException(Err.USER.NOT_FOUND);
     if (user.plant) throw new BadRequestException(Err.PLANT.EXISTING_PlANT);
+
+    // 식물 히스토리 키운시간의 시작시간 저장
+    await this.plantHistoryRepository.save({
+      startTime: new Date(),
+      user,
+    });
 
     const plant = await this.plantRepository.save({
       name: createPlantDto.name,
@@ -94,6 +103,29 @@ export class PlantService {
     if (!user) throw new BadRequestException(Err.USER.NOT_FOUND);
     if (!user.plant) throw new BadRequestException(Err.PLANT.NOT_FOUND);
 
+    const plantHistory = await this.plantHistoryRepository.findOne({
+      where: {
+        user,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+
+    // 식물 히스토리 키운시간의 종료시간 저장
+    await this.plantHistoryRepository.update(plantHistory.id, {
+      name: user.plant.name,
+      kind: user.plant.kind,
+      finishTime: new Date(),
+    });
+
+    // 새로 키우기 시작한 식물 시작시간 저장
+    await this.plantHistoryRepository.save({
+      startTime: new Date(),
+      user,
+    });
+
+    // 새로 키우기 시작한 식물 정보 저정
     await this.plantRepository.update(user.plant.id, {
       name: createPlantDto.name,
       kind: createPlantDto.kind,
