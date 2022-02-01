@@ -1,4 +1,4 @@
-import {Injectable, BadRequestException} from '@nestjs/common';
+import {Injectable, BadRequestException, InternalServerErrorException} from '@nestjs/common';
 import {UpdateNotificationInfo} from './dto/updateNotificationInfo.dto';
 import {InjectRepository} from '@nestjs/typeorm';
 import {User} from './entities/user.entity';
@@ -37,12 +37,33 @@ export class UserService {
     const {token} = await oAuth2Client.getAccessToken();
     oAuth2Client.setCredentials({access_token: token});
 
+    // aws dynamoDB client 인증
+    const dynamoDB = this.configService.get('dynamoDB');
+
     if (updateNotificationInfo.notification == 'YES') {
-      // 정보 알람 동의
-      // cahce에 올리기
+      // 정보 알람 동의 dynamoDB put
+      try {
+        await dynamoDB
+          .put({
+            TableName: 'InfoNotificationUser',
+            Item: {gmail: user.gmail},
+          })
+          .promise();
+      } catch (error) {
+        throw new InternalServerErrorException(Err.SERVER.UNEXPECTED_ERROR);
+      }
     } else if (updateNotificationInfo.notification == 'NO') {
-      // 정보 알람 비동의
-      // cahce 삭제
+      // 정보 알람 비동의 dynamoDB delete
+      try {
+        await dynamoDB
+          .delete({
+            TableName: 'InfoNotificationUser',
+            Key: {gmail: user.gmail},
+          })
+          .promise();
+      } catch (error) {
+        throw new InternalServerErrorException(Err.SERVER.UNEXPECTED_ERROR);
+      }
     }
 
     // google gmail 인증
@@ -63,11 +84,37 @@ export class UserService {
           topicName: this.configService.get('googlePubSub').topicName,
         },
       });
+      // 메일 삭제 알람 동의 dynamoDB put
+      try {
+        await dynamoDB
+          .put({
+            TableName: 'DeleteMailNotificationUser',
+            Item: {
+              gmail: user.gmail,
+              notificationLimit: updateNotificationInfo.notificationLimit,
+              googleRefreshToken: user.googleRefreshToken,
+            },
+          })
+          .promise();
+      } catch (error) {
+        throw new InternalServerErrorException(Err.SERVER.UNEXPECTED_ERROR);
+      }
     } else if (updateNotificationInfo.notificationLimit == 0) {
       // 메일 삭제 알람 비동의 gmail watch stop
       await googleMail.users.stop({
         userId: user.gmail,
       });
+      // 메일 삭제 알람 비동이 dynamoDB delete
+      try {
+        await dynamoDB
+          .delete({
+            TableName: 'DeleteMailNotificationUser',
+            Key: {gmail: user.gmail},
+          })
+          .promise();
+      } catch (error) {
+        throw new InternalServerErrorException(Err.SERVER.UNEXPECTED_ERROR);
+      }
     }
 
     await this.userRepository.update(userId, updateNotificationInfo);

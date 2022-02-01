@@ -27,13 +27,18 @@ export class PushNotificationService implements OnApplicationBootstrap {
   }
 
   async sendDeleteMailPushNotification() {
+    // google auth 인증
     const auth = this.configService.get('googleAuth');
     const oAuth2Client = this.configService.get('googleOAuth2Client');
 
+    // google PubSub 인증
     const pubSubClient = new PubSub({auth});
     const subscription = pubSubClient.subscription(
       this.configService.get('googlePubSub').subscriptionName,
     );
+
+    // aws dynamoDB client 인증
+    const dynamoDB = this.configService.get('dynamoDB');
 
     // 메일 삭제 푸시 알림 동의 사용자 푸시 알림 보내는 로직
     const messageHandler = async message => {
@@ -47,7 +52,13 @@ export class PushNotificationService implements OnApplicationBootstrap {
 
       const {emailAddress} = JSON.parse(`${message.data}`);
       const consentedUserEmail = emailAddress;
-      const consentedUser = await this.userRepository.findOne({gmail: consentedUserEmail});
+      const {Item} = await dynamoDB
+        .get({
+          TableName: 'DeleteMailNotificationUser',
+          Key: {gmail: consentedUserEmail},
+        })
+        .promise();
+      const consentedUser = Item;
 
       // 사용자 접근 권한 확인
       oAuth2Client.setCredentials({refresh_token: consentedUser.googleRefreshToken});
