@@ -1,5 +1,5 @@
 import {Injectable, OnApplicationBootstrap} from '@nestjs/common';
-import {SchedulerRegistry} from '@nestjs/schedule';
+import {Cron, SchedulerRegistry} from '@nestjs/schedule';
 import {CronJob} from 'cron';
 import * as admin from 'firebase-admin';
 import {ConfigService} from '@nestjs/config';
@@ -21,9 +21,6 @@ export class PushNotificationService implements OnApplicationBootstrap {
   onApplicationBootstrap() {
     // 메일 삭제 푸시 알림 작동
     this.sendDeleteMailPushNotification();
-
-    // // 환경 보호 정보 알릶 작동
-    // this.snedInformationPushNotification();
   }
 
   async sendDeleteMailPushNotification() {
@@ -109,39 +106,39 @@ export class PushNotificationService implements OnApplicationBootstrap {
     return;
   }
 
-  async snedInformationPushNotification() {
-    // const registrationToken = createPushNotificationDto.deviceId;
-    // const notificationWord = NotificationWord[createPushNotificationDto.notification];
-    // const clinicName = createPushNotificationDto.clinicName;
-    // const clinicAddress = createPushNotificationDto.clinicAddress;
-    // const replacedClinicAddress = clinicAddress.replace(clinicName, '');
-    // const message = {
-    //   notification: {
-    //     title: `${createPushNotificationDto.nickname}님, ${notificationWord}시간 후에 PCR 검사를 꼭 받으세요.`,
-    //     body: `${clinicName}(${replacedClinicAddress})`,
-    //   },
-    //   token: registrationToken,
-    // };
-    // const timebeforeCheck = NotificationTime[createPushNotificationDto.notification];
-    // parseInt(timebeforeCheck);
-    // const date = new Date(createPushNotificationDto.date);
-    // date.setMinutes(date.getMinutes() - timebeforeCheck);
-    // date.setHours(date.getHours() - 9);
-    // const job = new CronJob(date, async () => {
-    //   await admin
-    //     .messaging()
-    //     .send(message)
-    //     .then(response => {
-    //       console.log('Successfully sent message:', response);
-    //     })
-    //     .catch(error => {
-    //       console.log('Error sending message:', error);
-    //     });
-    // });
-    // this.schedulerRegistry.addCronJob(`${createPushNotificationDto.userId}-${date}`, job);
-    // job.start();
+  @Cron('0 00 13 * * 1-5', {
+    name: 'info_notification',
+    timeZone: 'Asia/Seoul',
+  })
+  async sendInformationPushNotification() {
+    // aws dynamoDB client 인증
+    const dynamoDB = this.configService.get('dynamoDB');
+
+    const {Items} = await dynamoDB.scan({TableName: 'InfoNotificationUser'}).promise();
+
+    Items.filter(async consentedUser => {
+      const token = consentedUser.deviceId;
+      const content = {
+        notification: {
+          title: `환경 정보 알림입니다.`,
+          body: `구글 줌 회의 때, 화면을 끄면 이산화탄소를 줄일 수 있어요.`,
+        },
+        token,
+      };
+      // // firebase에 알람 보내는 로직
+      // await admin
+      //   .messaging()
+      //   .send(content)
+      //   .then(response => {
+      //     console.log('Successfully sent push notification:', response);
+      //   })
+      //   .catch(error => {
+      //     console.log('Error sending push notification:', error);
+      //   });
+    });
   }
 
+  // cron 확인하기
   getCrons() {
     const jobs = this.schedulerRegistry.getCronJobs();
     jobs.forEach((value, key, map) => {
@@ -154,6 +151,7 @@ export class PushNotificationService implements OnApplicationBootstrap {
     });
   }
 
+  // cron 삭제
   deleteCron(name: string) {
     this.schedulerRegistry.deleteCronJob(name);
   }
