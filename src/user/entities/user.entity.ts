@@ -1,12 +1,13 @@
-import {Column, Entity, JoinColumn, OneToOne} from 'typeorm';
+import {Column, Entity, JoinColumn, OneToOne, OneToMany} from 'typeorm';
 import {ApiProperty} from '@nestjs/swagger';
 import {BaseEntity} from './../../common/entity/base-entity.entity';
 import {Plant} from './../../plant/entities/plant.entity';
 import {Mail} from './../../mail/entities/mail.entity';
+import {PlantHistory} from './../../plant-history/entities/plant-history.entity';
 
 export enum GetNotification {
-  YES = 'YES', // 한국어 자막
-  NO = 'NO', // 영어 자막
+  YES = 'YES', // 환경 보호 알림 동의
+  NO = 'NO', // 환경 보호 알림 해제
 }
 
 @Entity()
@@ -39,6 +40,9 @@ export class User extends BaseEntity {
   @OneToOne(() => Plant, plant => plant.user, {eager: true, onDelete: 'CASCADE'})
   @JoinColumn()
   plant: Plant;
+
+  @OneToMany(() => PlantHistory, plantHistory => plantHistory.user)
+  plantHistoryList: PlantHistory[];
 
   @OneToOne(() => Mail, mail => mail.user, {eager: true, onDelete: 'CASCADE'})
   @JoinColumn()
