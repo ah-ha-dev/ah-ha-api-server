@@ -83,23 +83,24 @@ export class PushNotificationService implements OnApplicationBootstrap {
       if (totalCount == consentedUser.notificationLimit) {
         // 사용자한테 보내는 푸시 알림 내용
         const token = consentedUser.deviceId;
-        const content = {
-          notification: {
+        const message = {
+          data: {
             title: `${consentedUserEmail} 계정을 확인해주세요.`,
             body: `${consentedUser.notificationLimit}개의 메일이 쌓여있습니다.`,
+            link: 'https://www.google.com/intl/ko/gmail/about/',
           },
           token,
         };
         // firebase에 알람 보내는 로직
-        // await admin
-        //   .messaging()
-        //   .send(content)
-        //   .then(response => {
-        //     console.log('Successfully sent push notification:', response);
-        //   })
-        //   .catch(error => {
-        //     console.log('Error sending push notification:', error);
-        //   });
+        await admin
+          .messaging()
+          .send(message)
+          .then(response => {
+            console.log('Successfully sent push notification:', response);
+          })
+          .catch(error => {
+            console.log('Error sending push notification:', error);
+          });
       }
     };
     subscription.on('message', messageHandler);
@@ -118,23 +119,23 @@ export class PushNotificationService implements OnApplicationBootstrap {
 
     Items.filter(async consentedUser => {
       const token = consentedUser.deviceId;
-      const content = {
-        notification: {
+      const message = {
+        data: {
           title: `환경 정보 알림입니다.`,
           body: `구글 줌 회의 때, 화면을 끄면 이산화탄소를 줄일 수 있어요.`,
         },
         token,
       };
-      // // firebase에 알람 보내는 로직
-      // await admin
-      //   .messaging()
-      //   .send(content)
-      //   .then(response => {
-      //     console.log('Successfully sent push notification:', response);
-      //   })
-      //   .catch(error => {
-      //     console.log('Error sending push notification:', error);
-      //   });
+      // firebase에 알람 보내는 로직
+      await admin
+        .messaging()
+        .send(message)
+        .then(response => {
+          console.log('Successfully sent push notification:', response);
+        })
+        .catch(error => {
+          console.log('Error sending push notification:', error);
+        });
     });
   }
 
