@@ -9,32 +9,39 @@ import * as admin from 'firebase-admin';
 import {ServiceAccount} from 'firebase-admin';
 import {ConfigService} from '@nestjs/config';
 import firebaseConfig from './common/config/firebase.config';
+import * as Sentry from '@sentry/node';
+import sentryConfig from './common/config/sentry.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix(API_PREFIX);
-  app.enableCors();
-  app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalFilters(new HttpExceptionFilter());
-  app.useGlobalInterceptors(new TransformInterceptor());
 
   // firebase admin 설정
   /*
   TODO
   todo deviceId 받아서 테스트 해보기
   */
-
-  const ConfigService = firebaseConfig();
+  const FirebaseConfig = firebaseConfig();
   const adminConfig: ServiceAccount = {
-    projectId: ConfigService.projectId,
-    privateKey: ConfigService.privateKey,
-    clientEmail: ConfigService.clientEmail,
+    projectId: FirebaseConfig.projectId,
+    privateKey: FirebaseConfig.privateKey,
+    clientEmail: FirebaseConfig.clientEmail,
   };
 
   admin.initializeApp({
     credential: admin.credential.cert(adminConfig),
     databaseURL: 'https://ah-ha-gcp-default-rtdb.firebaseio.com/',
   });
+
+  const SentryConfig = sentryConfig();
+  Sentry.init({
+    dsn: SentryConfig.dsn,
+  });
+
+  app.setGlobalPrefix(API_PREFIX);
+  app.enableCors();
+  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalInterceptors(new TransformInterceptor());
 
   const config = new DocumentBuilder()
     .setTitle('AH-HA API docs')
