@@ -4,9 +4,10 @@ import {PlantController} from './plant.controller';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {Plant} from './entities/plant.entity';
 import {User} from './../user/entities/user.entity';
+import {PlantHistory} from './../plant-history/entities/plant-history.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Plant])],
+  imports: [TypeOrmModule.forFeature([User, Plant, PlantHistory])],
   controllers: [PlantController],
   providers: [PlantService],
   exports: [PlantService],
