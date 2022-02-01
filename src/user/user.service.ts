@@ -46,7 +46,10 @@ export class UserService {
         await dynamoDB
           .put({
             TableName: 'InfoNotificationUser',
-            Item: {gmail: user.gmail},
+            Item: {
+              gmail: user.gmail,
+              deviceId: user.deviceId,
+            },
           })
           .promise();
       } catch (error) {
@@ -92,6 +95,7 @@ export class UserService {
             Item: {
               gmail: user.gmail,
               notificationLimit: updateNotificationInfo.notificationLimit,
+              deviceId: user.deviceId,
               googleRefreshToken: user.googleRefreshToken,
             },
           })
