@@ -14,11 +14,14 @@ export class PlantHistoryService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  create() {
-    return 'This action adds a new plantHistory';
+  async createPlantHistory(user: User) {
+    return await this.plantHistoryRepository.save({
+      startTime: new Date(),
+      user,
+    });
   }
 
-  async findAllHistory(userId: number) {
+  async findAllPlantHistory(userId: number) {
     const user = await this.userRepository.findOne({
       where: {
         id: userId,
@@ -40,11 +43,22 @@ export class PlantHistoryService {
     return plantHistoryList;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} plantHistory`;
+  async findLatestPlantHistory(user: User) {
+    return await this.plantHistoryRepository.findOne({
+      where: {
+        user,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
   }
 
-  update(id: number) {
-    return `This action updates a #${id} plantHistory`;
+  async update(plantHistoryId: number, user: User) {
+    return await this.plantHistoryRepository.update(plantHistoryId, {
+      name: user.plant.name,
+      kind: user.plant.kind,
+      finishTime: new Date(),
+    });
   }
 }
