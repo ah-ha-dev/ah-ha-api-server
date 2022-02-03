@@ -4,14 +4,14 @@
 ![image](https://user-images.githubusercontent.com/66551410/151972459-5b975570-138a-4cc8-8437-7cbdd1a0de4c.png)
 
 ## 📦 CICD Architecture
-![image](https://user-images.githubusercontent.com/66551410/143553684-ec4748e5-d4ba-4c63-ba80-b7c958e00eed.png)
+![image](https://user-images.githubusercontent.com/66551410/152016992-cff6b052-35d7-416e-868c-b2702a3ef692.png)
 
 ## 🌸  Server Architecture
-![image](https://user-images.githubusercontent.com/66551410/151944635-e10e6bfe-dbb5-461a-b90a-4e21f4e5c8c1.png)
+![image](https://user-images.githubusercontent.com/66551410/152017244-3d4528c0-555d-4392-b89e-d39856525226.png)
 
 ## 🛠️ Test Server
-http://3.34.193.30/api/v1
+http://3.35.131.195/api/v1
 
 ## 💚 API Documentation (Swagger)
-http://3.34.193.30/api/v1/docs
+http://3.35.131.195/api/v1/docs/
  
