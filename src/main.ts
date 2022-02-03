@@ -5,9 +5,36 @@ import {AppModule} from './app.module';
 import {API_PREFIX, DOC_PATH} from './constants';
 import {HttpExceptionFilter} from './common/exception/httpException.filter';
 import {TransformInterceptor} from './common/interceptor/transform.interceptor';
+import * as admin from 'firebase-admin';
+import {ServiceAccount} from 'firebase-admin';
+import {ConfigService} from '@nestjs/config';
+import * as Sentry from '@sentry/node';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // firebase admin 설정
+  /*
+  TODO
+  todo deviceId 받아서 테스트 해보기
+  */
+  const configService = app.get<ConfigService>(ConfigService);
+
+  const adminConfig: ServiceAccount = {
+    projectId: configService.get('firebase').projectId,
+    privateKey: configService.get('firebase').privateKey,
+    clientEmail: configService.get('firebase').clientEmail,
+  };
+
+  admin.initializeApp({
+    credential: admin.credential.cert(adminConfig),
+    databaseURL: 'https://ah-ha-gcp-default-rtdb.firebaseio.com/',
+  });
+
+  Sentry.init({
+    dsn: configService.get('sentry').dsn,
+  });
+
   app.setGlobalPrefix(API_PREFIX);
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
