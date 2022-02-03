@@ -9,6 +9,9 @@ import {User} from 'src/user/entities/user.entity';
 import {Repository} from 'typeorm';
 import {gmail} from '@googleapis/gmail';
 
+import sentryConfig from 'src/common/config/sentry.config';
+import {IncomingWebhook} from '@slack/client';
+
 @Injectable()
 export class PushNotificationService implements OnApplicationBootstrap {
   constructor(
@@ -29,7 +32,10 @@ export class PushNotificationService implements OnApplicationBootstrap {
     const oAuth2Client = this.configService.get('googleOAuth2Client');
 
     // google PubSub 인증
-    const pubSubClient = new PubSub({auth});
+    const pubSubClient = new PubSub({
+      auth,
+      projectId: this.configService.get('googlePubSub').projectId,
+    });
     const subscription = pubSubClient.subscription(
       this.configService.get('googlePubSub').subscriptionName,
     );
@@ -40,11 +46,29 @@ export class PushNotificationService implements OnApplicationBootstrap {
     // 메일 삭제 푸시 알림 동의 사용자 푸시 알림 보내는 로직
     const messageHandler = async message => {
       // 메일 삭제 푸시알림 동의 사용자 이메일 확인
-      console.log(
-        `Received message: id ${message.id}, data ${message.data}, attributes: ${JSON.stringify(
-          message.attributes,
-        )}`,
-      );
+      const result = `Received message: id ${message.id}, data ${
+        message.data
+      }, attributes: ${JSON.stringify(message.attributes)}`;
+
+      const SentryConfig = sentryConfig();
+      const webhook = new IncomingWebhook(SentryConfig.webhook);
+      webhook.send({
+        attachments: [
+          {
+            color: 'danger',
+            text: '💚ah-ha-api-server pubsub 응답 정상💚',
+            fields: [
+              {
+                title: `Request Message: google pubsub`,
+                value: result,
+                short: false,
+              },
+            ],
+            ts: Math.floor(new Date().getTime() / 1000).toString(),
+          },
+        ],
+      });
+
       message.ack();
 
       const {emailAddress} = JSON.parse(`${message.data}`);
