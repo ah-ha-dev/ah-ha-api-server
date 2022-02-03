@@ -6,16 +6,16 @@ import {User} from './../user/entities/user.entity';
 import {Err} from './../common/error';
 import {CreatePlantDto} from './dto/createPlant.dto';
 import {PlantHistory} from './../plant-history/entities/plant-history.entity';
+import {PlantHistoryService} from './../plant-history/plant-history.service';
 
 @Injectable()
 export class PlantService {
   constructor(
     @InjectRepository(Plant)
     private readonly plantRepository: Repository<Plant>,
-    @InjectRepository(PlantHistory)
-    private readonly plantHistoryRepository: Repository<PlantHistory>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private plantHistoryService: PlantHistoryService,
   ) {}
 
   async createPlant(userId: number, createPlantDto: CreatePlantDto) {
@@ -30,10 +30,7 @@ export class PlantService {
     if (user.plant) throw new BadRequestException(Err.PLANT.EXISTING_PlANT);
 
     // 식물 히스토리 키운시간의 시작시간 저장
-    await this.plantHistoryRepository.save({
-      startTime: new Date(),
-      user,
-    });
+    await this.plantHistoryService.createPlantHistory(user);
 
     const plant = await this.plantRepository.save({
       name: createPlantDto.name,
@@ -103,27 +100,12 @@ export class PlantService {
     if (!user) throw new BadRequestException(Err.USER.NOT_FOUND);
     if (!user.plant) throw new BadRequestException(Err.PLANT.NOT_FOUND);
 
-    const plantHistory = await this.plantHistoryRepository.findOne({
-      where: {
-        user,
-      },
-      order: {
-        createdAt: 'DESC',
-      },
-    });
-
+    const plantHistory = await this.plantHistoryService.findLatestPlantHistory(user);
     // 식물 히스토리 키운시간의 종료시간 저장
-    await this.plantHistoryRepository.update(plantHistory.id, {
-      name: user.plant.name,
-      kind: user.plant.kind,
-      finishTime: new Date(),
-    });
+    await this.plantHistoryService.update(plantHistory.id, user);
 
     // 새로 키우기 시작한 식물 시작시간 저장
-    await this.plantHistoryRepository.save({
-      startTime: new Date(),
-      user,
-    });
+    await this.plantHistoryService.createPlantHistory(user);
 
     // 새로 키우기 시작한 식물 정보 저정
     await this.plantRepository.update(user.plant.id, {
