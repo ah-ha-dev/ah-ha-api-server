@@ -11,9 +11,9 @@ export class PlantHistoryController {
   constructor(private readonly plantHistoryService: PlantHistoryService) {}
 
   @Get()
-  @docs.findAllHistory('사용자 식물 히스토리 정보')
+  @docs.findAllPlantHistory('사용자 식물 히스토리 정보')
   @UseGuards(JwtAuthGuard)
-  findAllHistory(@AuthUser() user) {
-    return this.plantHistoryService.findAllHistory(user.id);
+  findAllPlantHistory(@AuthUser() user) {
+    return this.plantHistoryService.findAllPlantHistory(user.id);
   }
 }

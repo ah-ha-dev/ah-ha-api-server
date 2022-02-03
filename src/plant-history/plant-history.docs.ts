@@ -5,7 +5,7 @@ import {findAllHistoryListResponseBodyDto} from './dto/findAllHistoryList.dto';
 import {PlantHistoryController} from './plant-history.controller';
 
 export const docs: SwaggerMethodDoc<PlantHistoryController> = {
-  findAllHistory(summary: string) {
+  findAllPlantHistory(summary: string) {
     return applyDecorators(
       ApiBearerAuth(),
       ApiOperation({
