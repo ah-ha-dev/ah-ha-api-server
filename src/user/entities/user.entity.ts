@@ -22,6 +22,12 @@ export class User extends BaseEntity {
     unique: true,
     nullable: true,
   })
+  deviceId: string;
+
+  @Column({
+    unique: true,
+    nullable: true,
+  })
   notification: GetNotification;
 
   @Column({
@@ -29,12 +35,6 @@ export class User extends BaseEntity {
     nullable: true,
   })
   notificationLimit: number;
-
-  @Column({
-    unique: true,
-    nullable: true,
-  })
-  deviceId: string;
 
   /* Relations */
   @OneToOne(() => Plant, plant => plant.user, {eager: true, onDelete: 'CASCADE'})

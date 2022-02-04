@@ -9,5 +9,6 @@ import {PlantHistory} from './entities/plant-history.entity';
   imports: [TypeOrmModule.forFeature([User, PlantHistory])],
   controllers: [PlantHistoryController],
   providers: [PlantHistoryService],
+  exports: [PlantHistoryService],
 })
 export class PlantHistoryModule {}
