@@ -44,7 +44,8 @@ export const docs: SwaggerMethodDoc<PlantController> = {
       ApiBearerAuth(),
       ApiOperation({
         summary,
-        description: '사용자의 식물 정보를 반환합니다.',
+        description:
+          '사용자의 식물 정보를 반환합니다. \t\n 식물 종류는 GREENONION : 대파, TOMATO : 토마토, BROCCOLI : 브로콜리 입니다.',
       }),
       ApiOkResponse({
         type: GetPlantInfoResponseBodyDto,
@@ -69,7 +70,8 @@ export const docs: SwaggerMethodDoc<PlantController> = {
       ApiBearerAuth(),
       ApiOperation({
         summary,
-        description: '사용자의 식물 정보를 업데이트합니다.',
+        description:
+          '사용자의 식물 정보를 업데이트합니다. \t\n 식물 종류는 GREENONION : 대파, TOMATO : 토마토, BROCCOLI : 브로콜리 입니다.',
       }),
       ApiOkResponse({
         type: BaseUpdateResponseDto,
@@ -95,7 +97,7 @@ export const docs: SwaggerMethodDoc<PlantController> = {
       ApiOperation({
         summary,
         description:
-          '사용자가 식물이 성장 완료한 경우, 다시 기르기 위해 사용합니다. name, kind는 새로 키우기 시작한 식물의 정보입니다. \t\n 사용자의 식물의 level, score를 초기화합니다. 사용자가 기른 식물수(ordinalNumber)가 1 증가 합니다.',
+          '사용자가 식물이 성장 완료한 경우, 다시 기르기 위해 사용합니다. name, kind는 새로 키우기 시작한 식물의 정보입니다. \t\n 사용자의 식물의 level, score를 초기화합니다. 사용자가 기른 식물수(ordinalNumber)가 1 증가 합니다. \t\n 식물 종류는 GREENONION : 대파, TOMATO : 토마토, BROCCOLI : 브로콜리 입니다.',
       }),
       ApiCreatedResponse({
         type: CreatePlantResponseBodyDto,
