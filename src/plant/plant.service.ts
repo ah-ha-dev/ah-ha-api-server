@@ -7,6 +7,7 @@ import {Err} from './../common/error';
 import {CreatePlantDto} from './dto/createPlant.dto';
 import {PlantHistory} from './../plant-history/entities/plant-history.entity';
 import {PlantHistoryService} from './../plant-history/plant-history.service';
+import {UpdatePlantInfoDto} from './dto/updatePlantInfo.dto';
 
 @Injectable()
 export class PlantService {
@@ -61,7 +62,7 @@ export class PlantService {
     return await this.plantRepository.findOne(user.plant.id);
   }
 
-  async updatePlantInfo(userId: number, createPlantDto: CreatePlantDto) {
+  async updatePlantInfo(userId: number, updatePlantInfoDto: UpdatePlantInfoDto) {
     const user = await this.userRepository.findOne({
       where: {
         id: userId,
@@ -72,7 +73,7 @@ export class PlantService {
     if (!user) throw new BadRequestException(Err.USER.NOT_FOUND);
     if (!user.plant) throw new BadRequestException(Err.PLANT.NOT_FOUND);
 
-    await this.plantRepository.update(user.plant.id, createPlantDto);
+    await this.plantRepository.update(user.plant.id, updatePlantInfoDto);
     return '업데이트에 성공하였습니다.';
   }
 
