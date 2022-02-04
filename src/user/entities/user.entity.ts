@@ -24,6 +24,18 @@ export class User extends BaseEntity {
   })
   deviceId: string;
 
+  @Column({
+    unique: true,
+    nullable: true,
+  })
+  notification: GetNotification;
+
+  @Column({
+    unique: true,
+    nullable: true,
+  })
+  notificationLimit: number;
+
   /* Relations */
   @OneToOne(() => Plant, plant => plant.user, {eager: true, onDelete: 'CASCADE'})
   @JoinColumn()

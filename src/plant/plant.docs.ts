@@ -19,7 +19,7 @@ export const docs: SwaggerMethodDoc<PlantController> = {
       ApiOperation({
         summary,
         description:
-          '사용자의 식물을 생성합니다. 초기 설정 값은 socre: 0, level: 1, ordinalNumber: 0 입니다.',
+          '사용자의 식물을 생성합니다. 초기 설정 값은 socre: 0, level: 1, ordinalNumber: 0 입니다. \t\n 식물 종류는 GREENONION : 대파, TOMATO : 토마토, BROCCOLI : 브로콜리 입니다.',
       }),
       ApiCreatedResponse({
         type: CreatePlantResponseBodyDto,
