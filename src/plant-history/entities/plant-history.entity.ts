@@ -13,7 +13,7 @@ export class PlantHistory extends BaseEntity {
   @Column({nullable: true})
   name: string;
 
-  @Column({type: 'enum', enum: Kind})
+  @Column({nullable: true, type: 'enum', enum: Kind})
   kind: Kind;
 
   @Column()

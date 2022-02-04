@@ -10,7 +10,9 @@
 - Firebase Cloud Messaging  
   사용자에게 푸시 알람을 보내기 위해 사용하였습니다.
 - DynamoDB  
-  푸시 알람을 받는 사용자를 저장하기 위해 사용하였습니다. RDS만을 사용했을 때보다, 20%의 속도 향상을 얻었습니다.
+  푸시 알람을 받는 사용자를 저장하기 위해 사용하였습니다. RDS만을 사용했을 때보다, 39%의 속도 향상을 얻었습니다. (더미 데이터 50000개 기준)
+- Sentry / Slack
+  실시간 버그 트래킹을 위해 사용하였습니다.
   
 
 ## 🛠️ Dev Server
@@ -65,18 +67,17 @@ $ npm run start
 
 ## 🌸 About Server
 ### Server Architecture
-![image](https://user-images.githubusercontent.com/66551410/152334430-85a5f7fe-aa56-46e7-92e2-76c677c86d8b.png)
+![image](https://user-images.githubusercontent.com/66551410/152565647-551079d2-7643-4ac0-ba6e-28f02c7d96b9.png)
 
 ### CICD Architecture
 ![image](https://user-images.githubusercontent.com/66551410/152016992-cff6b052-35d7-416e-868c-b2702a3ef692.png)
 
 ### ERD
-![image](https://user-images.githubusercontent.com/66551410/152513474-d0598745-f23b-486e-80c0-74a4943857d3.png)
+![image](https://user-images.githubusercontent.com/66551410/152563288-231e1ff3-1394-424e-8fe9-0a387324d730.png)
 
 ## 💁‍♀️ Additional Repositories
 
 - [Android](https://github.com/CrayonTeamJ/frontend.git)
-- [Server](https://github.com/ah-ha-dev/ah-ha-api-server)  
 
 ## 🌈 Contributors
 
