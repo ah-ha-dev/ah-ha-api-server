@@ -2,9 +2,10 @@ import {ApiProperty} from '@nestjs/swagger';
 import {GetPlantInfoResponseDto} from './getPlantInfo.dto';
 import {BasePostReponseDto} from './../../common/dto/base-post-response.dto';
 import {Kind} from '../entities/plant.entity';
-import {IsEnum} from 'class-validator';
+import {IsEnum, IsString} from 'class-validator';
 
 export class CreatePlantDto {
+  @IsString()
   @ApiProperty({description: '식물의 이름', example: '식물이'})
   name: string;
 
