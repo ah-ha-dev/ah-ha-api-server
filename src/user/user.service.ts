@@ -121,7 +121,6 @@ export class UserService {
       }
     }
 
-    await this.userRepository.update(userId, updateNotificationInfo);
     return '업데이트에 성공하였습니다.';
   }
 

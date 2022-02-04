@@ -22,18 +22,6 @@ export class User extends BaseEntity {
     unique: true,
     nullable: true,
   })
-  notification: GetNotification;
-
-  @Column({
-    unique: true,
-    nullable: true,
-  })
-  notificationLimit: number;
-
-  @Column({
-    unique: true,
-    nullable: true,
-  })
   deviceId: string;
 
   /* Relations */
