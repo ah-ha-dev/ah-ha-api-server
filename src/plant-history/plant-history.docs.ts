@@ -11,7 +11,7 @@ export const docs: SwaggerMethodDoc<PlantHistoryController> = {
       ApiOperation({
         summary,
         description:
-          '사용자의 식물 히스토리 정보를 반환합니다. 순서는 오래된 정보부터 최신 정보 순으로 정렬하여 반환합니다.',
+          '사용자의 식물 히스토리 정보를 반환합니다. 순서는 오래된 정보부터 최신 정보 순으로 정렬하여 반환합니다. \t\n 식물 종류는 GREENONION : 대파, TOMATO : 토마토, BROCCOLI : 브로콜리 입니다.',
       }),
       ApiOkResponse({
         type: findAllHistoryListResponseBodyDto,
