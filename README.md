@@ -6,7 +6,7 @@
 - Google Gmail API  
   사용자의 실시간 메일 개수를 얻기 위해 사용하였습니다.
 - Google Cloud Platform PUB/SUB  
-  사용자의 메일함에 이벤트가 있을 때마다, 비동기적으로 통신하기 하여, 데이터를 수집하기 위해 사용하였습니다.
+  사용자의 메일함에 이벤트가 있을 때마다, 비동기적으로 통신하여, 데이터를 수집하기 위해 사용하였습니다.
 - Firebase Cloud Messaging  
   사용자에게 푸시 알람을 보내기 위해 사용하였습니다.
 - DynamoDB  
@@ -71,16 +71,16 @@ $ npm run start
 ![image](https://user-images.githubusercontent.com/66551410/152016992-cff6b052-35d7-416e-868c-b2702a3ef692.png)
 
 ### ERD
-![image](https://user-images.githubusercontent.com/66551410/151972459-5b975570-138a-4cc8-8437-7cbdd1a0de4c.png)
+![image](https://user-images.githubusercontent.com/66551410/152513474-d0598745-f23b-486e-80c0-74a4943857d3.png)
 
 ## 💁‍♀️ Additional Repositories
 
 - [Android](https://github.com/CrayonTeamJ/frontend.git)
 - [Server](https://github.com/ah-ha-dev/ah-ha-api-server)  
 
-## Contributors
+## 🌈 Contributors
 
 | Sohee Lee | Heewon Kang | Hyuna Kim | Sunwoo Ho | 
 | :----: | :----: | :----: |:----: 
-| [@소희님 관련 계정](링크) | [@ymcho24](https://github.com/ymcho24) | [@akimcse](https://github.com/akimcse) | [@hocaron](https://github.com/hocaron) |
+| [@heehee.dsgn](https://www.instagram.com/heehee.dsgn/) | [@ymcho24](https://github.com/ymcho24) | [@akimcse](https://github.com/akimcse) | [@hocaron](https://github.com/hocaron) |
 |Designer |Android |Android |Backend | 
