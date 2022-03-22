@@ -1,7 +1,7 @@
-import {Injectable, BadRequestException} from '@nestjs/common';
+import {Injectable, BadRequestException, InternalServerErrorException} from '@nestjs/common';
 import {Mail} from './entities/mail.entity';
 import {InjectRepository} from '@nestjs/typeorm';
-import {Repository} from 'typeorm';
+import {Repository, Connection} from 'typeorm';
 import {gmail} from '@googleapis/gmail';
 import {ConfigService} from '@nestjs/config';
 import {User} from './../user/entities/user.entity';
@@ -17,6 +17,7 @@ export class MailService {
     private readonly userRepository: Repository<User>,
     private readonly configService: ConfigService,
     private readonly plantService: PlantService,
+    private connection: Connection,
   ) {}
 
   async getMailTotalCount(userId: number): Promise<any> {
@@ -57,9 +58,23 @@ export class MailService {
       await this.mailRepository.save({totalCount, user});
     } else {
       // 전에 있었던 메일 개수 보다 현재 메일 개수가 적은 경우 (사용자가 메일을 삭제한 경우)
-      const score = user.mail.totalCount - totalCount;
-      if (score > 0) await this.plantService.updatePlantScore(user.plant.id, score);
-      await this.mailRepository.update(user.mail.id, {totalCount});
+
+      const queryRunner = this.connection.createQueryRunner();
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+
+      try {
+        const score = user.mail.totalCount - totalCount;
+        if (score > 0) await this.plantService.updatePlantScore(user.plant.id, score);
+        await this.mailRepository.update(user.mail.id, {totalCount});
+
+        await queryRunner.commitTransaction();
+      } catch {
+        await queryRunner.rollbackTransaction();
+        throw new InternalServerErrorException(Err.SERVER.UNEXPECTED_ERROR);
+      } finally {
+        await queryRunner.release();
+      }
     }
     return {totalCount};
   }
