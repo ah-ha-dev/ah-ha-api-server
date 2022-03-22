@@ -78,10 +78,17 @@ export class PlantService {
 
   async updatePlantScore(plantId: number, score: number) {
     const plant = await this.plantRepository.findOne(plantId);
-    const level = plant.level;
+    let level = plant.level;
 
-    // todo  레벨 계산하는 로직 추가
-    const sum = plant.score + score;
+    let sum = plant.score + score;
+
+    level = Math.floor(sum / 20) + 1;
+
+    // 점수가 최고 정수에 도달한 경우
+    if (sum > 100) {
+      sum = 100;
+      level = 5;
+    }
 
     await this.plantRepository.update(plantId, {
       score: sum,

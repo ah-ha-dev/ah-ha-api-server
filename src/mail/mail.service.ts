@@ -56,6 +56,7 @@ export class MailService {
     if (!user.mail) {
       await this.mailRepository.save({totalCount, user});
     } else {
+      // 전에 있었던 메일 개수 보다 현재 메일 개수가 적은 경우 (사용자가 메일을 삭제한 경우)
       const score = user.mail.totalCount - totalCount;
       if (score > 0) await this.plantService.updatePlantScore(user.plant.id, score);
       await this.mailRepository.update(user.mail.id, {totalCount});
