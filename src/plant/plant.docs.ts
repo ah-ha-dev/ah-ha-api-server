@@ -45,7 +45,7 @@ export const docs: SwaggerMethodDoc<PlantController> = {
       ApiOperation({
         summary,
         description:
-          '사용자의 식물 정보를 반환합니다. \t\n 식물 종류는 GREENONION : 대파, TOMATO : 토마토, BROCCOLI : 브로콜리 입니다.',
+          '사용자의 식물 정보를 반환합니다. \t\n 식물 종류는 GREENONION : 대파, TOMATO : 토마토, BROCCOLI : 브로콜리 입니다. \t\n 레벨과 점수에 대한 정보는 다음과 같습니다. \t\n level 1 : 0 - 19 \t\n level 2 : 20 - 39 \t\n level 3 : 40 - 59 \t\n level 4 : 60 - 79 \t\n level 5 : 80 - 100 \t\n 식물 점수가 100 이상인 경우, 레벨 및 점수 갱신은 일어나지 않습니다.',
       }),
       ApiOkResponse({
         type: GetPlantInfoResponseBodyDto,

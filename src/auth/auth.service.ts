@@ -34,7 +34,10 @@ export class AuthService {
       if (!user) {
         user = await this.signUpWithGoogle(email, tokens.refresh_token, googleLoginDto.deviceId);
       } else {
-        await this.userRepository.update(user.id, {deviceId: googleLoginDto.deviceId});
+        await this.userRepository.update(user.id, {
+          deviceId: googleLoginDto.deviceId,
+          googleRefreshToken: tokens.refresh_token,
+        });
       }
 
       // 유저가 이미 식물 캐릭터를 가지고 있는지 확인
