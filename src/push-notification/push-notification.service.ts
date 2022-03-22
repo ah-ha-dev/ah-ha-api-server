@@ -1,6 +1,5 @@
 import {Injectable, OnApplicationBootstrap} from '@nestjs/common';
 import {Cron, SchedulerRegistry} from '@nestjs/schedule';
-import {CronJob} from 'cron';
 import * as admin from 'firebase-admin';
 import {ConfigService} from '@nestjs/config';
 import {PubSub} from '@google-cloud/pubsub';

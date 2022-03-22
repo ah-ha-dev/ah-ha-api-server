@@ -5,7 +5,6 @@ import {Repository} from 'typeorm';
 import {User} from './../user/entities/user.entity';
 import {Err} from './../common/error';
 import {CreatePlantDto} from './dto/createPlant.dto';
-import {PlantHistory} from './../plant-history/entities/plant-history.entity';
 import {PlantHistoryService} from './../plant-history/plant-history.service';
 import {UpdatePlantInfoDto} from './dto/updatePlantInfo.dto';
 
