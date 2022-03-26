@@ -1,5 +1,4 @@
 import {Column, Entity, JoinColumn, OneToOne, OneToMany} from 'typeorm';
-import {ApiProperty} from '@nestjs/swagger';
 import {BaseEntity} from './../../common/entity/base-entity.entity';
 import {Plant} from './../../plant/entities/plant.entity';
 import {Mail} from './../../mail/entities/mail.entity';

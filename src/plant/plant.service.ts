@@ -1,11 +1,10 @@
-import {Injectable, BadRequestException} from '@nestjs/common';
+import {Injectable, BadRequestException, InternalServerErrorException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Plant} from './entities/plant.entity';
-import {Repository} from 'typeorm';
+import {Connection, Repository} from 'typeorm';
 import {User} from './../user/entities/user.entity';
 import {Err} from './../common/error';
 import {CreatePlantDto} from './dto/createPlant.dto';
-import {PlantHistory} from './../plant-history/entities/plant-history.entity';
 import {PlantHistoryService} from './../plant-history/plant-history.service';
 import {UpdatePlantInfoDto} from './dto/updatePlantInfo.dto';
 
@@ -17,6 +16,7 @@ export class PlantService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private plantHistoryService: PlantHistoryService,
+    private connection: Connection,
   ) {}
 
   async createPlant(userId: number, createPlantDto: CreatePlantDto) {
@@ -79,10 +79,17 @@ export class PlantService {
 
   async updatePlantScore(plantId: number, score: number) {
     const plant = await this.plantRepository.findOne(plantId);
-    const level = plant.level;
+    let level = plant.level;
 
-    // todo  레벨 계산하는 로직 추가
-    const sum = plant.score + score;
+    let sum = plant.score + score;
+
+    level = Math.floor(sum / 20) + 1;
+
+    // 점수가 최고 정수에 도달한 경우
+    if (sum > 100) {
+      sum = 100;
+      level = 5;
+    }
 
     await this.plantRepository.update(plantId, {
       score: sum,
@@ -91,6 +98,11 @@ export class PlantService {
   }
 
   async resetPlant(userId: number, createPlantDto: CreatePlantDto) {
+    const queryRunner = this.connection.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
     const user = await this.userRepository.findOne({
       where: {
         id: userId,
@@ -102,26 +114,36 @@ export class PlantService {
     if (!user.plant) throw new BadRequestException(Err.PLANT.NOT_FOUND);
 
     const plantHistory = await this.plantHistoryService.findLatestPlantHistory(user);
-    // 식물 히스토리 키운시간의 종료시간 저장
-    await this.plantHistoryService.update(plantHistory.id, user);
 
-    // 새로 키우기 시작한 식물 시작시간 저장
-    await this.plantHistoryService.createPlantHistory(user);
+    try {
+      // 식물 히스토리 키운시간의 종료시간 저장
+      await this.plantHistoryService.update(plantHistory.id, user);
 
-    // 새로 키우기 시작한 식물 정보 저정
-    await this.plantRepository.update(user.plant.id, {
-      name: createPlantDto.name,
-      kind: createPlantDto.kind,
-      score: 0,
-      level: 1,
-      ordinalNumber: user.plant.ordinalNumber + 1,
-    });
+      // 새로 키우기 시작한 식물 시작시간 저장
+      await this.plantHistoryService.createPlantHistory(user);
 
-    const plant = await this.plantRepository.findOne(user.plant.id);
-    delete plant.user;
-    delete plant.createdAt;
-    delete plant.updatedAt;
-    delete plant.deletedAt;
-    return plant;
+      // 새로 키우기 시작한 식물 정보 저정
+      await this.plantRepository.update(user.plant.id, {
+        name: createPlantDto.name,
+        kind: createPlantDto.kind,
+        score: 0,
+        level: 1,
+        ordinalNumber: user.plant.ordinalNumber + 1,
+      });
+      await queryRunner.commitTransaction();
+
+      const plant = await this.plantRepository.findOne(user.plant.id);
+      delete plant.user;
+      delete plant.createdAt;
+      delete plant.updatedAt;
+      delete plant.deletedAt;
+
+      return plant;
+    } catch {
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException(Err.SERVER.UNEXPECTED_ERROR);
+    } finally {
+      await queryRunner.release();
+    }
   }
 }
