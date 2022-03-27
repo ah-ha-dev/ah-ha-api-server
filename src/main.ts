@@ -3,8 +3,6 @@ import {NestFactory} from '@nestjs/core';
 import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
 import {AppModule} from './app.module';
 import {API_PREFIX, DOC_PATH} from './constants';
-import {HttpExceptionFilter} from './common/exception/httpException.filter';
-import {TransformInterceptor} from './common/interceptor/transform.interceptor';
 import * as admin from 'firebase-admin';
 import {ServiceAccount} from 'firebase-admin';
 import {ConfigService} from '@nestjs/config';
@@ -38,8 +36,6 @@ async function bootstrap() {
   app.setGlobalPrefix(API_PREFIX);
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalFilters(new HttpExceptionFilter());
-  app.useGlobalInterceptors(new TransformInterceptor());
 
   const config = new DocumentBuilder()
     .setTitle('AH-HA API docs')
