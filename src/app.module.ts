@@ -18,6 +18,11 @@ import googlePubSubConfig from './common/config/googlePubSub.config';
 import dynamoDBConfig from './common/config/dynamoDB.config';
 import sentryConfig from './common/config/sentry.config';
 import firebaseConfig from './common/config/firebase.config';
+import {PrivacyReplacer} from './common/interceptor/PrivacyReplacer';
+import {LogInterceptor} from './common/interceptor/log.interceptor';
+import {TransformInterceptor} from './common/interceptor/transform.interceptor';
+import {HttpExceptionFilter} from './common/exception/httpException.filter';
+import {APP_FILTER, APP_INTERCEPTOR} from '@nestjs/core';
 
 @Module({
   imports: [
@@ -47,6 +52,21 @@ import firebaseConfig from './common/config/firebase.config';
     PlantHistoryModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    PrivacyReplacer,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LogInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+  ],
 })
 export class AppModule {}
