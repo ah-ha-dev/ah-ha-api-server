@@ -21,7 +21,7 @@ export class User extends BaseEntity {
     unique: true,
     nullable: true,
   })
-  deviceId: string;
+  pushToken: string;
 
   @Column({
     unique: true,
