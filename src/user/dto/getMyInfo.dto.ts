@@ -16,7 +16,7 @@ export class GetMyInfo {
   notificationLimit: number;
 
   @ApiProperty({description: '사용자의 디바이스 아이디', example: '12345'})
-  deviceId: string;
+  pushToken: string;
 }
 
 export class GetMyInfoResponseBodyDto extends BaseGetReponseDto {

@@ -14,7 +14,7 @@ async function bootstrap() {
   // firebase admin 설정
   /*
   TODO
-  todo deviceId 받아서 테스트 해보기
+  todo pushToken 받아서 테스트 해보기
   */
   const configService = app.get<ConfigService>(ConfigService);
 
