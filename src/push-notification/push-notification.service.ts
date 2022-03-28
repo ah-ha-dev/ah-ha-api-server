@@ -105,7 +105,7 @@ export class PushNotificationService implements OnApplicationBootstrap {
 
       if (totalCount == consentedUser.notificationLimit) {
         // 사용자한테 보내는 푸시 알림 내용
-        const token = consentedUser.deviceId;
+        const token = consentedUser.pushToken;
         const message = {
           data: {
             title: `${consentedUserEmail} 계정을 확인해주세요.`,
@@ -141,7 +141,7 @@ export class PushNotificationService implements OnApplicationBootstrap {
     const {Items} = await dynamoDB.scan({TableName: 'InfoNotificationUser'}).promise();
 
     Items.filter(async consentedUser => {
-      const token = consentedUser.deviceId;
+      const token = consentedUser.pushToken;
       const message = {
         data: {
           title: `환경 정보 알림입니다.`,
