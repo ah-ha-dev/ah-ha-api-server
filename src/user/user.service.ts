@@ -48,7 +48,7 @@ export class UserService {
             TableName: 'InfoNotificationUser',
             Item: {
               gmail: user.gmail,
-              deviceId: user.deviceId,
+              pushToken: user.pushToken,
             },
           })
           .promise();
@@ -95,7 +95,7 @@ export class UserService {
             Item: {
               gmail: user.gmail,
               notificationLimit: updateNotificationInfo.notificationLimit,
-              deviceId: user.deviceId,
+              pushToken: user.pushToken,
               googleRefreshToken: user.googleRefreshToken,
             },
           })

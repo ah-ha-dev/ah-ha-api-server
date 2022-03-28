@@ -9,7 +9,7 @@ export class GoogleLoginDto {
 
   @IsString()
   @ApiProperty({example: '12345'})
-  deviceId: string;
+  pushToken: string;
 }
 
 export class GoogleLoginResponseDto {

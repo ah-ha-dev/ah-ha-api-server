@@ -32,10 +32,10 @@ export class AuthService {
 
       // 새로운 유저인 경우 회원가입 진행
       if (!user) {
-        user = await this.signUpWithGoogle(email, tokens.refresh_token, googleLoginDto.deviceId);
+        user = await this.signUpWithGoogle(email, tokens.refresh_token, googleLoginDto.pushToken);
       } else {
         await this.userRepository.update(user.id, {
-          deviceId: googleLoginDto.deviceId,
+          pushToken: googleLoginDto.pushToken,
           googleRefreshToken: tokens.refresh_token,
         });
       }
@@ -58,11 +58,11 @@ export class AuthService {
     }
   }
 
-  async signUpWithGoogle(gmail: string, refreshToken: string, deviceId: string): Promise<User> {
+  async signUpWithGoogle(gmail: string, refreshToken: string, pushToken: string): Promise<User> {
     const user = await this.userRepository.save({
       gmail,
       googleRefreshToken: refreshToken,
-      deviceId,
+      pushToken,
     });
     return user;
   }
