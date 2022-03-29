@@ -110,7 +110,6 @@ export class PushNotificationService implements OnApplicationBootstrap {
           data: {
             title: `${consentedUserEmail} 계정을 확인해주세요.`,
             body: `${consentedUser.notificationLimit}개의 메일이 쌓여있습니다.`,
-            link: 'https://www.google.com/intl/ko/gmail/about/',
           },
           token,
         };
@@ -130,7 +129,7 @@ export class PushNotificationService implements OnApplicationBootstrap {
     return;
   }
 
-  @Cron('0 00 13 * * 1-5', {
+  @Cron('00 00 15 * * 1-5', {
     name: 'info_notification',
     timeZone: 'Asia/Seoul',
   })
@@ -139,6 +138,8 @@ export class PushNotificationService implements OnApplicationBootstrap {
     const dynamoDB = this.configService.get('dynamoDB');
 
     const {Items} = await dynamoDB.scan({TableName: 'InfoNotificationUser'}).promise();
+
+    console.log(Items);
 
     Items.filter(async consentedUser => {
       const token = consentedUser.pushToken;
