@@ -22,6 +22,7 @@ export class AuthService {
 
       const {tokens} = await oAuth2Client.getToken(googleLoginDto.authorizationCode);
       const {email} = await oAuth2Client.getTokenInfo(tokens.access_token);
+
       let hasPlant = false;
       let user = await this.userRepository.findOne({
         where: {
