@@ -24,13 +24,11 @@ export class User extends BaseEntity {
   pushToken: string;
 
   @Column({
-    unique: true,
     nullable: true,
   })
   notification: GetNotification;
 
   @Column({
-    unique: true,
     nullable: true,
   })
   notificationLimit: number;

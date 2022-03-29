@@ -83,11 +83,11 @@ export class PlantService {
 
     let sum = plant.score + score;
 
-    level = Math.floor(sum / 2) + 1;
+    level = Math.floor(sum / 5) + 1;
 
     // 점수가 최고 정수에 도달한 경우
-    if (sum >= 10) {
-      sum = 10;
+    if (sum >= 25) {
+      sum = 25;
       level = 5;
     }
 
