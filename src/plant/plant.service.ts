@@ -7,6 +7,7 @@ import {Err} from './../common/error';
 import {CreatePlantDto} from './dto/createPlant.dto';
 import {PlantHistoryService} from './../plant-history/plant-history.service';
 import {UpdatePlantInfoDto} from './dto/updatePlantInfo.dto';
+import {PLANT_SCORE_PER_LEVEL, MAX_PLANT_SCORE, MAX_PLANT_LEVEL} from './../constants';
 
 @Injectable()
 export class PlantService {
@@ -83,12 +84,12 @@ export class PlantService {
 
     let sum = plant.score + score;
 
-    level = Math.floor(sum / 5) + 1;
-
     // 점수가 최고 정수에 도달한 경우
-    if (sum >= 25) {
-      sum = 25;
-      level = 5;
+    if (sum >= MAX_PLANT_SCORE) {
+      sum = MAX_PLANT_SCORE;
+      level = MAX_PLANT_LEVEL;
+    } else {
+      level = Math.floor(sum / PLANT_SCORE_PER_LEVEL) + 1;
     }
 
     await this.plantRepository.update(plantId, {
