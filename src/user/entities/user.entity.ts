@@ -18,7 +18,6 @@ export class User extends BaseEntity {
   googleRefreshToken: string;
 
   @Column({
-    unique: true,
     nullable: true,
   })
   pushToken: string;
