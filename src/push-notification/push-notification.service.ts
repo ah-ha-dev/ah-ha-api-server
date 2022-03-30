@@ -108,8 +108,8 @@ export class PushNotificationService implements OnApplicationBootstrap {
         const token = consentedUser.pushToken;
         const message = {
           data: {
-            title: `${consentedUserEmail} 계정을 확인해주세요.`,
-            body: `${consentedUser.notificationLimit}개의 메일이 쌓여있습니다.`,
+            title: `Please check your account ${consentedUserEmail}.`,
+            body: `There are ${consentedUser.notificationLimit} emails piled up.`,
           },
           token,
         };
@@ -145,8 +145,8 @@ export class PushNotificationService implements OnApplicationBootstrap {
       const token = consentedUser.pushToken;
       const message = {
         data: {
-          title: `환경 정보 알림입니다.`,
-          body: `구글 줌 회의 때, 화면을 끄면 이산화탄소를 줄일 수 있어요.`,
+          title: `Environmental information notification`,
+          body: `During Google Zoom meetings, you can reduce carbon dioxide by turning off the screen.`,
         },
         token,
       };
